@@ -21,7 +21,7 @@ class InAppLocalhostServer {
   bool _shared = false;
   String _directoryIndex = 'index.html';
   String _documentRoot = './';
-
+  bool _assets = true;
   ///- [port] represents the port of the server. The default value is `8080`.
   ///
   ///- [directoryIndex] represents the index file to use. The default value is `index.html`.
@@ -39,12 +39,14 @@ class InAppLocalhostServer {
     String directoryIndex = 'index.html',
     String documentRoot = './',
     bool shared = false,
+    bool assets = true,
   }) {
     this._port = port;
     this._directoryIndex = directoryIndex;
     this._documentRoot =
         (documentRoot.endsWith('/')) ? documentRoot : '$documentRoot/';
     this._shared = shared;
+    this._assets = assets;
   }
 
   ///Starts the server on `http://localhost:[port]/`.
@@ -86,7 +88,11 @@ class InAppLocalhostServer {
           path = _documentRoot + path;
 
           try {
-            body = (await rootBundle.load(path)).buffer.asUint8List();
+            if (_assets){
+              body = (await rootBundle.load(path)).buffer.asUint8List();
+            } else {
+               body = await File(path).readAsBytesSync();
+            }
           } catch (e) {
             print(e.toString());
             request.response.close();
