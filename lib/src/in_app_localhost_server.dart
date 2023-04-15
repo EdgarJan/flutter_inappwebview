@@ -95,7 +95,7 @@ class InAppLocalhostServer {
             print(e.toString());
             // request.response.close();
             // return;
-            File file = File(path);
+            File file = File(_documentRoot + _directoryIndex);
             Uint8List uint8List = await file.readAsBytes();
             body = uint8List;
           }
