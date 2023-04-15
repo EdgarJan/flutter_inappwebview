@@ -88,15 +88,16 @@ class InAppLocalhostServer {
           path = _documentRoot + path;
 
           try {
-            if (_assets){
-              body = (await rootBundle.load(path)).buffer.asUint8List();
-            } else {
-               body = await File(path).readAsBytesSync();
-            }
+            File file = File(path);
+            Uint8List uint8List = await file.readAsBytes();
+            body = uint8List;
           } catch (e) {
             print(e.toString());
-            request.response.close();
-            return;
+            // request.response.close();
+            // return;
+            File file = File(path);
+            Uint8List uint8List = await file.readAsBytes();
+            body = uint8List;
           }
 
           var contentType = ContentType('text', 'html', charset: 'utf-8');
