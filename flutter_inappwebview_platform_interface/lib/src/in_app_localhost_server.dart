@@ -108,9 +108,11 @@ class DefaultInAppLocalhostServer extends PlatformInAppLocalhostServer {
           path = _documentRoot + path;
 
           try {
-            body = (await rootBundle.load(Uri.decodeFull(path)))
-                .buffer
-                .asUint8List();
+
+            File file = File(Uri.decodeFull(path));
+            Uint8List uint8List = await file.readAsBytes();
+            body = uint8List;
+
           } catch (e) {
             if (kDebugMode) {
               print(Uri.decodeFull(path));
